@@ -6,6 +6,7 @@ import os
 # build a bag
 # have an option for the user to store the bag
 class GolfBag:
+    
     def __init__(self):
         self.clubs = {}
 
@@ -53,9 +54,8 @@ class ShotCalculator:
 #    def __init__(self):
 
 
-
 def main():
-    
+
     bag = GolfBag()
 
     # Try to load existing bag
