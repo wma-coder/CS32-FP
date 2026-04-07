@@ -4,8 +4,7 @@ import json
 import os
 
 # build a bag
-# have an option for the user to store the bag
-
+# store the bag, and have an option for the user to create a new one
 class GolfBag:
 
     def __init__(self):
