@@ -1,5 +1,8 @@
 # project.py
 
+import json
+import os
+
 # build a bag
 # have an option for the user to store the bag
 class GolfBag:
@@ -19,6 +22,21 @@ class GolfBag:
         for club, dist in self.clubs.items():
             print(f"{club}: {dist} yards")
 
+    def save_bag(self, filename="bag.json"):
+        with open(filename, "w") as f:
+            json.dump(self.clubs, f)
+        print("Bag saved!")
+
+
+    def load_bag(self, filename="bag.json"):
+        if os.path.exists(filename):
+            with open(filename, "r") as f:
+                self.clubs = json.load(f)
+            print("Bag loaded!")
+            return True
+        return False
+
+
 class ShotCalculator:
     def __init__(self):
         self.wind = 0
@@ -30,6 +48,10 @@ class ShotCalculator:
         # simple rule: every 1 mph wind = 1 yard adjustment
         adjusted = distance + self.wind
         return adjusted
+
+# class MakeRecommendation:
+#    def __init__(self):
+
 
 
 def main():
