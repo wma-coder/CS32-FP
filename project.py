@@ -5,6 +5,7 @@ import os
 
 # build a bag
 # have an option for the user to store the bag
+
 class GolfBag:
 
     def __init__(self):
@@ -38,21 +39,20 @@ class GolfBag:
         return False
 
 
-class ShotCalculator:
+class ShotConditions:
     def __init__(self):
         self.wind = 0
 
     def get_conditions(self):
         self.wind = int(input("Enter wind speed (mph, positive = headwind, negative = tailwind): "))
 
-    def adjust_distance(self, distance):
-        # simple rule: every 1 mph wind = 1 yard adjustment
-        adjusted = distance + self.wind
-        return adjusted
+    # add some more conditions rather than just wind
 
-# class MakeRecommendation:
-#    def __init__(self):
 
+'''
+class ClubRecommendation Engine:
+    def __init__(self):
+'''
 
 def main():
 
