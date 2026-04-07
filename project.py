@@ -6,7 +6,7 @@ import os
 # build a bag
 # have an option for the user to store the bag
 class GolfBag:
-    
+
     def __init__(self):
         self.clubs = {}
 
@@ -26,7 +26,7 @@ class GolfBag:
     def save_bag(self, filename="bag.json"):
         with open(filename, "w") as f:
             json.dump(self.clubs, f)
-        print("Bag saved!")
+        print("\nBag saved!")
 
 
     def load_bag(self, filename="bag.json"):
