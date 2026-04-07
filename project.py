@@ -55,8 +55,21 @@ class ShotCalculator:
 
 
 def main():
+    
     bag = GolfBag()
-    bag.build_bag()
+
+    # Try to load existing bag
+    if bag.load_bag():
+        bag.show_bag()
+        choice = input("\nDo you want to rebuild your bag? (y/n): ").lower()
+        if choice == 'y':
+            bag.build_bag()
+            bag.save_bag()
+    else:
+        # No saved bag → create one
+        bag.build_bag()
+        bag.save_bag()
+
     bag.show_bag()
 
 
