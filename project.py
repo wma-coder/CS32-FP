@@ -1,4 +1,4 @@
-# test.py
+# project.py
 
 # build a bag
 # have an option for the user to store the bag
