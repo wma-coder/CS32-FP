@@ -57,7 +57,10 @@ class ShotConditions:
     def get_wind_components(self):
         theta_rad = math.radians(self.wind_angle)
 
+        wind_x = self.wind_speed * math.cos(theta_rad)  # forward/back
+        wind_y = self.wind_speed * math.sin(theta_rad)  # sideways
 
+        return wind_x, wind_y
 
     # add some more conditions rather than just wind
 
