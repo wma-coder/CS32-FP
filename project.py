@@ -64,7 +64,6 @@ class ShotConditions:
 
     # add some more conditions rather than just wind
 
-
 '''
 class ClubRecommendation Engine:
     def __init__(self):
