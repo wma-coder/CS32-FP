@@ -2,6 +2,7 @@
 
 import json
 import os
+import math
 
 # build a bag
 # store the bag, and have an option for the user to create a new one
@@ -40,10 +41,23 @@ class GolfBag:
 
 class ShotConditions:
     def __init__(self):
-        self.wind = 0
+        self.wind_speed = 0
+        self.wind_angle = 0
 
     def get_conditions(self):
-        self.wind = int(input("Enter wind speed (mph, positive = headwind, negative = tailwind): "))
+        self.wind_speed = float(input("Enter wind speed (mph): "))
+        print("\nWind direction options:")
+        print("0   = tailwind")
+        print("90  = left-to-right")
+        print("180 = headwind")
+        print("270 = right-to-left")
+
+        self.wind_angle = float(input("Enter wind direction (degrees): "))
+
+    def get_wind_components(self):
+        theta_rad = math.radians(self.wind_angle)
+
+
 
     # add some more conditions rather than just wind
 
