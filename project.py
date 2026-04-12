@@ -4,6 +4,9 @@ import json
 import os
 import math
 
+ball_mass_g = 45.93
+
+
 # build a bag
 # store the bag, and have an option for the user to create a new one
 class GolfBag:
@@ -87,6 +90,9 @@ def main():
 
     bag.show_bag()
 
+    shot_conditions = ShotConditions()
+
+    shot_conditions.get_conditions()
 
 if __name__ == "__main__":
     main()
