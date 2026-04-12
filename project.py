@@ -5,6 +5,8 @@ import os
 import math
 
 ball_mass_g = 45.93
+drag_coeff = 2.5
+
 
 
 # build a bag
