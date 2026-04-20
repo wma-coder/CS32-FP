@@ -8,6 +8,8 @@ ball_mass_g = 45.93 # grams
 drag_coeff = 0.25
 air_density = 1.225 # kg/m^3
 ball_radius = 0.02135 # m
+cross_sectional_area = math.pi * (ball_radius ** 2)
+hang_time = 5.0 # seconds
 
 # build a bag
 # store the bag, and have an option for the user to create a new one
@@ -62,7 +64,7 @@ class ShotConditions:
 
         while True:
             try:
-                self.distance = float(input("\nEnter wind speed (mph): "))
+                self.wind_speed = float(input("\nEnter wind speed (mph): "))
                 break
             except ValueError:
                 print("Invalid input. Please enter a number.")
@@ -96,13 +98,93 @@ class ClubRecommendationEngine:
         # Just initialize empty/default values
         self.results = None
 
+    def mph_to_mps(self, speed_mph):
+        return speed_mph * 0.44704
+
+    def yards_to_meters(self, yards):
+        return yards / 1.09361
+
+    def meters_to_yards(self, meters):
+        return meters * 1.09361
+
+    def compute_displacement(self, shot_distance_yards, wind_speed_mph, wind_angle_deg):
+        ball_mass_kg = ball_mass_g / 1000.0
+        shot_distance_m = self.yards_to_meters(shot_distance_yards)
+
+        ball_vx = shot_distance_m / hang_time
+        ball_vy = 0.0
+
+        theta_rad = math.radians(wind_angle_deg)
+        wind_x_mph = wind_speed_mph * math.cos(theta_rad)
+        wind_y_mph = wind_speed_mph * math.sin(theta_rad)
+
+        wind_x = self.mph_to_mps(wind_x_mph)
+        wind_y = self.mph_to_mps(wind_y_mph)
+
+        vrel_x = ball_vx - wind_x
+        vrel_y = ball_vy - wind_y
+        vrel_mag = math.sqrt(vrel_x**2 + vrel_y**2)
+
+        if vrel_mag == 0:
+            force_x = 0.0
+            force_y = 0.0
+        else:
+            drag_force_mag = (
+                0.5
+                * air_density
+                * drag_coeff
+                * cross_sectional_area
+                * (vrel_mag ** 2)
+            )
+
+            force_x = -drag_force_mag * (vrel_x / vrel_mag)
+            force_y = -drag_force_mag * (vrel_y / vrel_mag)
+
+        accel_x = force_x / ball_mass_kg
+        accel_y = force_y / ball_mass_kg
+
+        delta_x_m = 0.5 * accel_x * (hang_time ** 2)
+        delta_y_m = 0.5 * accel_y * (hang_time ** 2)
+
+        return delta_x_m, delta_y_m
+
     def calculate_adjustments(self, shot_conditions):
-        # Skeleton only for now
+        # baseline: no wind
+        baseline_dx_m, baseline_dy_m = self.compute_displacement(
+            shot_conditions.distance, 0, 0
+        )
+
+        # actual wind
+        wind_dx_m, wind_dy_m = self.compute_displacement(
+            shot_conditions.distance,
+            shot_conditions.wind_speed,
+            shot_conditions.wind_angle
+        )
+
+        # only keep the wind-caused change
+        delta_x_yards = self.meters_to_yards(wind_dx_m - baseline_dx_m)
+        delta_y_yards = self.meters_to_yards(wind_dy_m - baseline_dy_m)
+
+        playing_distance = shot_conditions.distance - delta_x_yards
+
+        if abs(delta_y_yards) < 0.5:
+            aim_direction = "straight"
+            aim_offset = 0.0
+        elif delta_y_yards > 0:
+            aim_direction = "left"
+            aim_offset = abs(delta_y_yards)
+        else:
+            aim_direction = "right"
+            aim_offset = abs(delta_y_yards)
+
         self.results = {
-            "playing_distance": 151,
-            "aim_direction": "right",
-            "aim_offset": 5
+            "playing_distance": round(playing_distance, 1),
+            "aim_direction": aim_direction,
+            "aim_offset": round(aim_offset, 1),
+            "distance_change": round(delta_x_yards, 1),
+            "lateral_change": round(delta_y_yards, 1)
         }
+
         return self.results
 
     def recommend_club(self, bag):
