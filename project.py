@@ -64,7 +64,6 @@ class ShotConditions:
                 print("Invalid input. Please enter a number.")
 
     def get_conditions(self):
-
         while True:
             try:
                 self.wind_speed = float(input("\nEnter wind speed (mph): "))
@@ -107,15 +106,13 @@ class ShotConditions:
                 print("Invalid input. Please enter a number.")
 
     def get_wind_components(self):
+        #Using trigonometry to break wind into x and y components
         theta_rad = math.radians(self.wind_angle)
 
         wind_x = self.wind_speed * math.cos(theta_rad)  # forward/back
         wind_y = self.wind_speed * math.sin(theta_rad)  # sideways
 
         return wind_x, wind_y
-
-    # add some more conditions rather than just wind
-
 
 class ClubRecommendationEngine:
 
@@ -184,22 +181,30 @@ class ClubRecommendationEngine:
         return delta_x_m, delta_y_m
 
     def apply_elevation_adjustment(self, distance_yards, elevation_ft):
+        # Rule of thumb: % distance increase per foot of elevation
         percent_increase = elevation_ft * 0.00116
+        # Convert percent to scaling factor
         multiplier = 1 + (percent_increase / 100.0)
 
+        # Divide because ball travels farther at elevation → play shorter
         adjusted_distance = distance_yards / multiplier
         return adjusted_distance
 
     def apply_temperature_adjustment(self, distance_yards, temperature_f):
         baseline_temp = 70.0
 
+        # How much colder or hotter compared to baseline (70°F)
         temp_diff = baseline_temp - temperature_f
 
+        # Rule: 1.5% distance change per 20°F
         percent_change = (temp_diff / 20.0) * 1.5  # percent
 
+        # Convert percent into scaling factor
         multiplier = 1 - (percent_change / 100.0)
 
+        # Divide because colder temps reduce carry → play longer
         adjusted_distance = distance_yards / multiplier
+
         return adjusted_distance
 
     def calculate_adjustments(self, shot_conditions):
