@@ -47,6 +47,7 @@ class GolfBag:
 
 
 class ShotConditions:
+    
     def __init__(self):
         self.distance = 0
         self.wind_speed = 0
