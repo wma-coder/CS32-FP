@@ -51,6 +51,7 @@ class ShotConditions:
         self.distance = 0
         self.wind_speed = 0
         self.wind_angle = 0
+        self.elevation_ft = 0
 
     def get_distance(self):
         while True:
@@ -78,6 +79,13 @@ class ShotConditions:
         while True:
             try:
                 self.wind_angle = float(input("Enter wind direction (degrees): "))
+                break
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+
+        while True:
+            try:
+                self.elevation_ft = float(input("Enter elevation above sea level (feet): "))
                 break
             except ValueError:
                 print("Invalid input. Please enter a number.")
