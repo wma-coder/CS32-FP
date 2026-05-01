@@ -23,7 +23,7 @@ class GolfBag:
 
         for i in range(num_clubs):
             club = input("Enter club name: ")
-            distance = int(input(f"How far do you hit your {club}? "))
+            distance = int(input(f"How far do you hit your {club} at sea level? "))
             self.clubs[club] = distance
 
     def show_bag(self):
