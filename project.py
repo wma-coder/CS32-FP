@@ -203,40 +203,46 @@ class ClubRecommendationEngine:
         return adjusted_distance
 
     def calculate_adjustments(self, shot_conditions):
-        # baseline: no wind
+        # computing drag effect in still air (reference case)
         baseline_dx_m, baseline_dy_m = self.compute_displacement(
             shot_conditions.distance, 0, 0
         )
 
-        # actual wind
+        # computing drag effect with actual wind
         wind_dx_m, wind_dy_m = self.compute_displacement(
             shot_conditions.distance,
             shot_conditions.wind_speed,
             shot_conditions.wind_angle
         )
 
-        # only keep the wind-caused change
+        # only keep the wind-caused change, isolating the wind effect
         delta_x_yards = self.meters_to_yards(wind_dx_m - baseline_dx_m)
         delta_y_yards = self.meters_to_yards(wind_dy_m - baseline_dy_m)
 
+        # Convert physical carry change into "playing distance" (more carry = play shorter, less carry = play longer)
         wind_adjusted_distance = shot_conditions.distance - delta_x_yards
 
+        # Adjust for thinner air at elevation (ball flies farther → play shorter)
         elevation_adjusted = self.apply_elevation_adjustment(
             wind_adjusted_distance,
             shot_conditions.elevation_ft
         )
 
+        # Adjust for temperature (colder = shorter, warmer = longer)
         playing_distance = self.apply_temperature_adjustment(
             elevation_adjusted,
             shot_conditions.temperature_f
         )
 
+        # Ignore very small drift (within ~0.5 yards)
         if abs(delta_y_yards) < 0.5:
             aim_direction = "straight"
             aim_offset = 0.0
+        # Positive drift means ball moves right → aim left
         elif delta_y_yards > 0:
             aim_direction = "left"
             aim_offset = abs(delta_y_yards)
+        # Negative drift means ball moves left → aim right
         else:
             aim_direction = "right"
             aim_offset = abs(delta_y_yards)
