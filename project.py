@@ -85,7 +85,7 @@ class ShotConditions:
 
         while True:
             try:
-                self.elevation_ft = float(input("Enter elevation above sea level (feet): "))
+                self.elevation_ft = float(input("\nEnter elevation above sea level (feet): "))
                 break
             except ValueError:
                 print("Invalid input. Please enter a number.")
