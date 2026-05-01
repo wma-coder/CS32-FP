@@ -47,12 +47,13 @@ class GolfBag:
 
 
 class ShotConditions:
-    
+
     def __init__(self):
         self.distance = 0
         self.wind_speed = 0
         self.wind_angle = 0
         self.elevation_ft = 0
+        self.temperature_f = 70
 
     def get_distance(self):
         while True:
@@ -87,6 +88,13 @@ class ShotConditions:
         while True:
             try:
                 self.elevation_ft = float(input("\nEnter elevation above sea level (feet): "))
+                break
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+
+        while True:
+            try:
+                self.temperature_f = float(input("Enter temperature (°F): "))
                 break
             except ValueError:
                 print("Invalid input. Please enter a number.")
