@@ -172,6 +172,22 @@ class ClubRecommendationEngine:
         adjusted_distance = distance_yards / multiplier
         return adjusted_distance
 
+    def apply_temperature_adjustment(self, distance_yards, temperature_f):
+        baseline_temp = 70.0
+
+        temp_diff = baseline_temp - temperature_f
+
+        percent_change = (temp_diff / 20.0) * 1.5  # percent
+
+        multiplier = 1 - (percent_change / 100.0)
+
+        # Prevent weird edge cases
+        if multiplier <= 0:
+            multiplier = 0.5
+
+        adjusted_distance = distance_yards / multiplier
+        return adjusted_distance
+
     def calculate_adjustments(self, shot_conditions):
         # baseline: no wind
         baseline_dx_m, baseline_dy_m = self.compute_displacement(
@@ -190,9 +206,15 @@ class ClubRecommendationEngine:
         delta_y_yards = self.meters_to_yards(wind_dy_m - baseline_dy_m)
 
         wind_adjusted_distance = shot_conditions.distance - delta_x_yards
-        playing_distance = self.apply_elevation_adjustment(
+
+        elevation_adjusted = self.apply_elevation_adjustment(
             wind_adjusted_distance,
             shot_conditions.elevation_ft
+        )
+
+        playing_distance = self.apply_temperature_adjustment(
+            elevation_adjusted,
+            shot_conditions.temperature_f
         )
 
         if abs(delta_y_yards) < 0.5:
