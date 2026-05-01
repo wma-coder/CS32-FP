@@ -180,7 +180,11 @@ class ClubRecommendationEngine:
         delta_x_yards = self.meters_to_yards(wind_dx_m - baseline_dx_m)
         delta_y_yards = self.meters_to_yards(wind_dy_m - baseline_dy_m)
 
-        playing_distance = shot_conditions.distance - delta_x_yards
+        wind_adjusted_distance = shot_conditions.distance - delta_x_yards
+        playing_distance = self.apply_elevation_adjustment(
+            wind_adjusted_distance,
+            shot_conditions.elevation_ft
+        )
 
         if abs(delta_y_yards) < 0.5:
             aim_direction = "straight"
