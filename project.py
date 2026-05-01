@@ -156,6 +156,13 @@ class ClubRecommendationEngine:
 
         return delta_x_m, delta_y_m
 
+    def apply_elevation_adjustment(self, distance_yards, elevation_ft):
+        percent_increase = elevation_ft * 0.00116
+        multiplier = 1 + (percent_increase / 100.0)
+
+        adjusted_distance = distance_yards / multiplier
+        return adjusted_distance
+
     def calculate_adjustments(self, shot_conditions):
         # baseline: no wind
         baseline_dx_m, baseline_dy_m = self.compute_displacement(
