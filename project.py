@@ -181,10 +181,6 @@ class ClubRecommendationEngine:
 
         multiplier = 1 - (percent_change / 100.0)
 
-        # Prevent weird edge cases
-        if multiplier <= 0:
-            multiplier = 0.5
-
         adjusted_distance = distance_yards / multiplier
         return adjusted_distance
 
