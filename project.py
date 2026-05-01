@@ -118,6 +118,7 @@ class ShotConditions:
 
 
 class ClubRecommendationEngine:
+
     def __init__(self):
         # Just initialize empty/default values
         self.results = None
@@ -135,24 +136,31 @@ class ClubRecommendationEngine:
         ball_mass_kg = ball_mass_g / 1000.0
         shot_distance_m = self.yards_to_meters(shot_distance_yards)
 
+        # Approximate average horizontal velocity
         ball_vx = shot_distance_m / hang_time
         ball_vy = 0.0
 
+        # break wind into forward (x) and sideways (y) components
         theta_rad = math.radians(wind_angle_deg)
         wind_x_mph = wind_speed_mph * math.cos(theta_rad)
         wind_y_mph = wind_speed_mph * math.sin(theta_rad)
 
+        # convert wind into meters per second for physics calculations
         wind_x = self.mph_to_mps(wind_x_mph)
         wind_y = self.mph_to_mps(wind_y_mph)
 
+        # relative velocity = ball velocity relative to air (key physics idea)
         vrel_x = ball_vx - wind_x
         vrel_y = ball_vy - wind_y
+
+        # Magnitude of relative velocity vector
         vrel_mag = math.sqrt(vrel_x**2 + vrel_y**2)
 
         if vrel_mag == 0:
             force_x = 0.0
             force_y = 0.0
         else:
+            # applying drag formula: F = 1/2 * rho * Cd * A * v^2
             drag_force_mag = (
                 0.5
                 * air_density
@@ -161,12 +169,15 @@ class ClubRecommendationEngine:
                 * (vrel_mag ** 2)
             )
 
+            # convert scalar drag force into vector form (in the opposite direction of motion)
             force_x = -drag_force_mag * (vrel_x / vrel_mag)
             force_y = -drag_force_mag * (vrel_y / vrel_mag)
 
+        # Use Newton's second law to calculate acceleration
         accel_x = force_x / ball_mass_kg
         accel_y = force_y / ball_mass_kg
 
+        # Using Kinematics to calculate displacement
         delta_x_m = 0.5 * accel_x * (hang_time ** 2)
         delta_y_m = 0.5 * accel_y * (hang_time ** 2)
 
