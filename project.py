@@ -94,8 +94,15 @@ class ShotConditions:
 
         while True:
             try:
-                self.temperature_f = float(input("Enter temperature (°F): "))
+                temp = float(input("Enter temperature (°F): "))
+
+                if temp < 0 or temp > 130:
+                    print("You should not be outside! Try again.")
+                    continue
+
+                self.temperature_f = temp
                 break
+
             except ValueError:
                 print("Invalid input. Please enter a number.")
 
