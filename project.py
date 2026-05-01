@@ -11,9 +11,9 @@ ball_radius = 0.02135 # m
 cross_sectional_area = math.pi * (ball_radius ** 2)
 hang_time = 5.0 # seconds
 
-# build a bag
-# store the bag, and have an option for the user to create a new one
+
 class GolfBag:
+    '''allowing the user to create, build, and store a golf bag'''
 
     def __init__(self):
         self.clubs = {}
@@ -47,6 +47,7 @@ class GolfBag:
 
 
 class ShotConditions:
+    '''getting shot conditions of wind, elevation, and temperature'''
 
     def __init__(self):
         self.distance = 0
@@ -115,6 +116,7 @@ class ShotConditions:
         return wind_x, wind_y
 
 class ClubRecommendationEngine:
+    '''The part of the program that calculates the effect of wind, altitude, and temperature on the distance and direction of the golf ball'''
 
     def __init__(self):
         # Just initialize empty/default values
@@ -286,6 +288,7 @@ class ClubRecommendationEngine:
 
 
 def main():
+    '''where the program is actually run'''
 
     bag = GolfBag()
 
